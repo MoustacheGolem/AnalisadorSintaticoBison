@@ -2,6 +2,9 @@
 %{
   # include "sintatico.tab.h"
 %}
+
+letter  [a-zA-Z]
+digit [0-9]
 %%
 
 
@@ -16,6 +19,9 @@
 \"(.*?)\"            { return STRING; }
 
 \+|\-|\*|\/|\%|\=|!|\&|\| { return yytext[0]; }
+
+\/\*.*?\*\/           { /* ignore */ }
+
 
 
 %%
