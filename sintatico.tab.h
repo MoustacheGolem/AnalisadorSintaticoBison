@@ -39,8 +39,9 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     NUM = 258,
-     ID = 259
+     INT = 258,
+     ID = 259,
+     STRING = 260
    };
 #endif
 

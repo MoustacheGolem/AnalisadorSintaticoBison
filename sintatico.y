@@ -4,8 +4,9 @@
 #include <stdio.h> 
 %}
 
-%token NUM
+%token INT
 %token ID
+%token STRING
 
 %%
 
@@ -25,7 +26,7 @@ lista_cmds:	cmd				{ ; }
 ;
 cmd:		ID '=' exp			{;}
 ;
-exp:		NUM				{ ;}
+exp:		INT				{ ;}
 		| ID				{ ; }
 		| exp exp '+'		{ ; }
 ;
