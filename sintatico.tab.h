@@ -40,8 +40,22 @@
       know about them.  */
    enum yytokentype {
      INT = 258,
-     ID = 259,
-     STRING = 260
+     CHAR = 259,
+     VOID = 260,
+     AND = 261,
+     OR = 262,
+     MEI = 263,
+     MAI = 264,
+     INTCON = 265,
+     ID = 266,
+     CHARCON = 267,
+     STRINGCON = 268,
+     IF = 269,
+     ELSE = 270,
+     WHILE = 271,
+     FOR = 272,
+     RETURN = 273,
+     EXTERN = 274
    };
 #endif
 
