@@ -98,8 +98,8 @@ stmt:		IF '(' expr ')' stmt
 ;
 
 stmt_list: /* empty */
-		|	stmt
 		|	stmt stmt_list
+		|	stmt
 ;
 
 assg:	 ID '=' expr

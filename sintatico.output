@@ -1,0 +1,2102 @@
+Rules useless in parser due to conflicts
+
+   47 stmt_list: stmt
+
+
+State 1 conflicts: 3 shift/reduce
+State 14 conflicts: 3 shift/reduce
+State 17 conflicts: 3 shift/reduce
+State 47 conflicts: 2 shift/reduce
+State 49 conflicts: 2 shift/reduce
+State 63 conflicts: 2 shift/reduce, 1 reduce/reduce
+State 85 conflicts: 1 reduce/reduce
+State 87 conflicts: 2 shift/reduce, 1 reduce/reduce
+State 106 conflicts: 12 shift/reduce
+State 107 conflicts: 12 shift/reduce
+State 137 conflicts: 12 shift/reduce
+State 138 conflicts: 12 shift/reduce
+State 139 conflicts: 12 shift/reduce
+State 143 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: input $end
+
+    1 input: /* empty */
+    2      | input line
+
+    3 line: '\n'
+    4     | prog '\n'
+
+    5 prog: lista_cmds
+
+    6 lista_cmds: dcl ';'
+    7           | dcl ';' lista_cmds
+    8           | func
+    9           | func lista_cmds
+
+   10 dcl: type var_decl
+   11    | maybe_extern type ID func_protos
+   12    | maybe_extern VOID ID func_protos
+
+   13 func_protos: ID '(' parm_types ')'
+   14            | ID '(' parm_types ')' ',' func_protos
+
+   15 maybe_extern: EXTERN
+   16             | /* empty */
+
+   17 var_decl: ID '[' INTCON ']'
+   18         | ID '[' INTCON ']' ',' var_decl
+   19         | ID
+   20         | ID ',' var_decl
+
+   21 type: INT
+   22     | CHAR
+
+   23 parm_types: VOID
+   24           | type ID
+   25           | type ID '[' ']'
+   26           | type ID ',' parm_types
+   27           | type ID '[' ']' ',' parm_types
+
+   28 func: type ID '(' parm_types ')' '{' sub_prog '}'
+   29     | VOID ID '(' parm_types ')' '{' sub_prog '}'
+
+   30 sub_prog: dcl ';'
+   31         | dcl ';' sub_prog
+   32         | stmt
+   33         | stmt sub_prog
+   34         | /* empty */
+
+   35 stmt: IF '(' expr ')' stmt
+   36     | IF '(' expr ')' stmt ELSE stmt
+   37     | WHILE '(' expr ')' stmt
+   38     | FOR '(' maybe_assg ';' maybe_expr ';' maybe_assg ')' stmt
+   39     | RETURN maybe_expr ';'
+   40     | assg ';'
+   41     | ID ';'
+   42     | ID '(' expr_list ')' ';'
+   43     | '{' stmt_list '}'
+   44     | ';'
+
+   45 stmt_list: /* empty */
+   46          | stmt stmt_list
+   47          | stmt
+
+   48 assg: ID '=' expr
+   49     | ID '[' expr ']' '=' expr
+
+   50 maybe_assg: assg
+   51           | /* empty */
+
+   52 expr: '-' expr
+   53     | '!' expr
+   54     | expr binop expr
+   55     | expr relop expr
+   56     | expr logical_op expr
+   57     | ID
+   58     | ID '(' expr_list ')'
+   59     | ID '[' expr ']'
+   60     | '(' expr ')'
+   61     | INTCON
+   62     | CHARCON
+   63     | STRINGCON
+
+   64 maybe_expr: expr
+   65           | /* empty */
+
+   66 expr_list: expr
+   67          | expr ',' expr_list
+
+   68 binop: '+'
+   69      | '-'
+   70      | '*'
+   71      | '/'
+
+   72 relop: '='
+   73      | '!'
+   74      | '<'
+   75      | '>'
+   76      | MEI
+   77      | MAI
+
+   78 logical_op: AND
+   79           | OR
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'\n' (10) 3 4
+'!' (33) 53 73
+'(' (40) 13 14 28 29 35 36 37 38 42 58 60
+')' (41) 13 14 28 29 35 36 37 38 42 58 60
+'*' (42) 70
+'+' (43) 68
+',' (44) 14 18 20 26 27 67
+'-' (45) 52 69
+'/' (47) 71
+';' (59) 6 7 30 31 38 39 40 41 42 44
+'<' (60) 74
+'=' (61) 48 49 72
+'>' (62) 75
+'[' (91) 17 18 25 27 49 59
+']' (93) 17 18 25 27 49 59
+'{' (123) 28 29 43
+'}' (125) 28 29 43
+error (256)
+INT (258) 21
+CHAR (259) 22
+VOID (260) 12 23 29
+AND (261) 78
+OR (262) 79
+MEI (263) 76
+MAI (264) 77
+INTCON (265) 17 18 61
+ID (266) 11 12 13 14 17 18 19 20 24 25 26 27 28 29 41 42 48 49 57 58
+    59
+CHARCON (267) 62
+STRINGCON (268) 63
+IF (269) 35 36
+ELSE (270) 36
+WHILE (271) 37
+FOR (272) 38
+RETURN (273) 39
+EXTERN (274) 15
+
+
+Nonterminals, with rules where they appear
+
+$accept (37)
+    on left: 0
+input (38)
+    on left: 1 2, on right: 0 2
+line (39)
+    on left: 3 4, on right: 2
+prog (40)
+    on left: 5, on right: 4
+lista_cmds (41)
+    on left: 6 7 8 9, on right: 5 7 9
+dcl (42)
+    on left: 10 11 12, on right: 6 7 30 31
+func_protos (43)
+    on left: 13 14, on right: 11 12 14
+maybe_extern (44)
+    on left: 15 16, on right: 11 12
+var_decl (45)
+    on left: 17 18 19 20, on right: 10 18 20
+type (46)
+    on left: 21 22, on right: 10 11 24 25 26 27 28
+parm_types (47)
+    on left: 23 24 25 26 27, on right: 13 14 26 27 28 29
+func (48)
+    on left: 28 29, on right: 8 9
+sub_prog (49)
+    on left: 30 31 32 33 34, on right: 28 29 31 33
+stmt (50)
+    on left: 35 36 37 38 39 40 41 42 43 44, on right: 32 33 35 36 37
+    38 46 47
+stmt_list (51)
+    on left: 45 46 47, on right: 43 46
+assg (52)
+    on left: 48 49, on right: 40 50
+maybe_assg (53)
+    on left: 50 51, on right: 38
+expr (54)
+    on left: 52 53 54 55 56 57 58 59 60 61 62 63, on right: 35 36 37
+    48 49 52 53 54 55 56 59 60 64 66 67
+maybe_expr (55)
+    on left: 64 65, on right: 38 39
+expr_list (56)
+    on left: 66 67, on right: 42 58 67
+binop (57)
+    on left: 68 69 70 71, on right: 54
+relop (58)
+    on left: 72 73 74 75 76 77, on right: 55
+logical_op (59)
+    on left: 78 79, on right: 56
+
+
+state 0
+
+    0 $accept: . input $end
+
+    $default  reduce using rule 1 (input)
+
+    input  go to state 1
+
+
+state 1
+
+    0 $accept: input . $end
+    2 input: input . line
+
+    $end    shift, and go to state 2
+    INT     shift, and go to state 3
+    CHAR    shift, and go to state 4
+    VOID    shift, and go to state 5
+    EXTERN  shift, and go to state 6
+    '\n'    shift, and go to state 7
+
+    INT   [reduce using rule 16 (maybe_extern)]
+    CHAR  [reduce using rule 16 (maybe_extern)]
+    VOID  [reduce using rule 16 (maybe_extern)]
+
+    line          go to state 8
+    prog          go to state 9
+    lista_cmds    go to state 10
+    dcl           go to state 11
+    maybe_extern  go to state 12
+    type          go to state 13
+    func          go to state 14
+
+
+state 2
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+state 3
+
+   21 type: INT .
+
+    $default  reduce using rule 21 (type)
+
+
+state 4
+
+   22 type: CHAR .
+
+    $default  reduce using rule 22 (type)
+
+
+state 5
+
+   29 func: VOID . ID '(' parm_types ')' '{' sub_prog '}'
+
+    ID  shift, and go to state 15
+
+
+state 6
+
+   15 maybe_extern: EXTERN .
+
+    $default  reduce using rule 15 (maybe_extern)
+
+
+state 7
+
+    3 line: '\n' .
+
+    $default  reduce using rule 3 (line)
+
+
+state 8
+
+    2 input: input line .
+
+    $default  reduce using rule 2 (input)
+
+
+state 9
+
+    4 line: prog . '\n'
+
+    '\n'  shift, and go to state 16
+
+
+state 10
+
+    5 prog: lista_cmds .
+
+    $default  reduce using rule 5 (prog)
+
+
+state 11
+
+    6 lista_cmds: dcl . ';'
+    7           | dcl . ';' lista_cmds
+
+    ';'  shift, and go to state 17
+
+
+state 12
+
+   11 dcl: maybe_extern . type ID func_protos
+   12    | maybe_extern . VOID ID func_protos
+
+    INT   shift, and go to state 3
+    CHAR  shift, and go to state 4
+    VOID  shift, and go to state 18
+
+    type  go to state 19
+
+
+state 13
+
+   10 dcl: type . var_decl
+   28 func: type . ID '(' parm_types ')' '{' sub_prog '}'
+
+    ID  shift, and go to state 20
+
+    var_decl  go to state 21
+
+
+state 14
+
+    8 lista_cmds: func .
+    9           | func . lista_cmds
+
+    INT     shift, and go to state 3
+    CHAR    shift, and go to state 4
+    VOID    shift, and go to state 5
+    EXTERN  shift, and go to state 6
+
+    INT       [reduce using rule 16 (maybe_extern)]
+    CHAR      [reduce using rule 16 (maybe_extern)]
+    VOID      [reduce using rule 16 (maybe_extern)]
+    $default  reduce using rule 8 (lista_cmds)
+
+    lista_cmds    go to state 22
+    dcl           go to state 11
+    maybe_extern  go to state 12
+    type          go to state 13
+    func          go to state 14
+
+
+state 15
+
+   29 func: VOID ID . '(' parm_types ')' '{' sub_prog '}'
+
+    '('  shift, and go to state 23
+
+
+state 16
+
+    4 line: prog '\n' .
+
+    $default  reduce using rule 4 (line)
+
+
+state 17
+
+    6 lista_cmds: dcl ';' .
+    7           | dcl ';' . lista_cmds
+
+    INT     shift, and go to state 3
+    CHAR    shift, and go to state 4
+    VOID    shift, and go to state 5
+    EXTERN  shift, and go to state 6
+
+    INT       [reduce using rule 16 (maybe_extern)]
+    CHAR      [reduce using rule 16 (maybe_extern)]
+    VOID      [reduce using rule 16 (maybe_extern)]
+    $default  reduce using rule 6 (lista_cmds)
+
+    lista_cmds    go to state 24
+    dcl           go to state 11
+    maybe_extern  go to state 12
+    type          go to state 13
+    func          go to state 14
+
+
+state 18
+
+   12 dcl: maybe_extern VOID . ID func_protos
+
+    ID  shift, and go to state 25
+
+
+state 19
+
+   11 dcl: maybe_extern type . ID func_protos
+
+    ID  shift, and go to state 26
+
+
+state 20
+
+   17 var_decl: ID . '[' INTCON ']'
+   18         | ID . '[' INTCON ']' ',' var_decl
+   19         | ID .
+   20         | ID . ',' var_decl
+   28 func: type ID . '(' parm_types ')' '{' sub_prog '}'
+
+    '('  shift, and go to state 27
+    ','  shift, and go to state 28
+    '['  shift, and go to state 29
+
+    $default  reduce using rule 19 (var_decl)
+
+
+state 21
+
+   10 dcl: type var_decl .
+
+    $default  reduce using rule 10 (dcl)
+
+
+state 22
+
+    9 lista_cmds: func lista_cmds .
+
+    $default  reduce using rule 9 (lista_cmds)
+
+
+state 23
+
+   29 func: VOID ID '(' . parm_types ')' '{' sub_prog '}'
+
+    INT   shift, and go to state 3
+    CHAR  shift, and go to state 4
+    VOID  shift, and go to state 30
+
+    type        go to state 31
+    parm_types  go to state 32
+
+
+state 24
+
+    7 lista_cmds: dcl ';' lista_cmds .
+
+    $default  reduce using rule 7 (lista_cmds)
+
+
+state 25
+
+   12 dcl: maybe_extern VOID ID . func_protos
+
+    ID  shift, and go to state 33
+
+    func_protos  go to state 34
+
+
+state 26
+
+   11 dcl: maybe_extern type ID . func_protos
+
+    ID  shift, and go to state 33
+
+    func_protos  go to state 35
+
+
+state 27
+
+   28 func: type ID '(' . parm_types ')' '{' sub_prog '}'
+
+    INT   shift, and go to state 3
+    CHAR  shift, and go to state 4
+    VOID  shift, and go to state 30
+
+    type        go to state 31
+    parm_types  go to state 36
+
+
+state 28
+
+   20 var_decl: ID ',' . var_decl
+
+    ID  shift, and go to state 37
+
+    var_decl  go to state 38
+
+
+state 29
+
+   17 var_decl: ID '[' . INTCON ']'
+   18         | ID '[' . INTCON ']' ',' var_decl
+
+    INTCON  shift, and go to state 39
+
+
+state 30
+
+   23 parm_types: VOID .
+
+    $default  reduce using rule 23 (parm_types)
+
+
+state 31
+
+   24 parm_types: type . ID
+   25           | type . ID '[' ']'
+   26           | type . ID ',' parm_types
+   27           | type . ID '[' ']' ',' parm_types
+
+    ID  shift, and go to state 40
+
+
+state 32
+
+   29 func: VOID ID '(' parm_types . ')' '{' sub_prog '}'
+
+    ')'  shift, and go to state 41
+
+
+state 33
+
+   13 func_protos: ID . '(' parm_types ')'
+   14            | ID . '(' parm_types ')' ',' func_protos
+
+    '('  shift, and go to state 42
+
+
+state 34
+
+   12 dcl: maybe_extern VOID ID func_protos .
+
+    $default  reduce using rule 12 (dcl)
+
+
+state 35
+
+   11 dcl: maybe_extern type ID func_protos .
+
+    $default  reduce using rule 11 (dcl)
+
+
+state 36
+
+   28 func: type ID '(' parm_types . ')' '{' sub_prog '}'
+
+    ')'  shift, and go to state 43
+
+
+state 37
+
+   17 var_decl: ID . '[' INTCON ']'
+   18         | ID . '[' INTCON ']' ',' var_decl
+   19         | ID .
+   20         | ID . ',' var_decl
+
+    ','  shift, and go to state 28
+    '['  shift, and go to state 29
+
+    $default  reduce using rule 19 (var_decl)
+
+
+state 38
+
+   20 var_decl: ID ',' var_decl .
+
+    $default  reduce using rule 20 (var_decl)
+
+
+state 39
+
+   17 var_decl: ID '[' INTCON . ']'
+   18         | ID '[' INTCON . ']' ',' var_decl
+
+    ']'  shift, and go to state 44
+
+
+state 40
+
+   24 parm_types: type ID .
+   25           | type ID . '[' ']'
+   26           | type ID . ',' parm_types
+   27           | type ID . '[' ']' ',' parm_types
+
+    ','  shift, and go to state 45
+    '['  shift, and go to state 46
+
+    $default  reduce using rule 24 (parm_types)
+
+
+state 41
+
+   29 func: VOID ID '(' parm_types ')' . '{' sub_prog '}'
+
+    '{'  shift, and go to state 47
+
+
+state 42
+
+   13 func_protos: ID '(' . parm_types ')'
+   14            | ID '(' . parm_types ')' ',' func_protos
+
+    INT   shift, and go to state 3
+    CHAR  shift, and go to state 4
+    VOID  shift, and go to state 30
+
+    type        go to state 31
+    parm_types  go to state 48
+
+
+state 43
+
+   28 func: type ID '(' parm_types ')' . '{' sub_prog '}'
+
+    '{'  shift, and go to state 49
+
+
+state 44
+
+   17 var_decl: ID '[' INTCON ']' .
+   18         | ID '[' INTCON ']' . ',' var_decl
+
+    ','  shift, and go to state 50
+
+    $default  reduce using rule 17 (var_decl)
+
+
+state 45
+
+   26 parm_types: type ID ',' . parm_types
+
+    INT   shift, and go to state 3
+    CHAR  shift, and go to state 4
+    VOID  shift, and go to state 30
+
+    type        go to state 31
+    parm_types  go to state 51
+
+
+state 46
+
+   25 parm_types: type ID '[' . ']'
+   27           | type ID '[' . ']' ',' parm_types
+
+    ']'  shift, and go to state 52
+
+
+state 47
+
+   29 func: VOID ID '(' parm_types ')' '{' . sub_prog '}'
+
+    INT     shift, and go to state 3
+    CHAR    shift, and go to state 4
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    EXTERN  shift, and go to state 6
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    INT       [reduce using rule 16 (maybe_extern)]
+    CHAR      [reduce using rule 16 (maybe_extern)]
+    '}'       reduce using rule 34 (sub_prog)
+    $default  reduce using rule 16 (maybe_extern)
+
+    dcl           go to state 60
+    maybe_extern  go to state 12
+    type          go to state 61
+    sub_prog      go to state 62
+    stmt          go to state 63
+    assg          go to state 64
+
+
+state 48
+
+   13 func_protos: ID '(' parm_types . ')'
+   14            | ID '(' parm_types . ')' ',' func_protos
+
+    ')'  shift, and go to state 65
+
+
+state 49
+
+   28 func: type ID '(' parm_types ')' '{' . sub_prog '}'
+
+    INT     shift, and go to state 3
+    CHAR    shift, and go to state 4
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    EXTERN  shift, and go to state 6
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    INT       [reduce using rule 16 (maybe_extern)]
+    CHAR      [reduce using rule 16 (maybe_extern)]
+    '}'       reduce using rule 34 (sub_prog)
+    $default  reduce using rule 16 (maybe_extern)
+
+    dcl           go to state 60
+    maybe_extern  go to state 12
+    type          go to state 61
+    sub_prog      go to state 66
+    stmt          go to state 63
+    assg          go to state 64
+
+
+state 50
+
+   18 var_decl: ID '[' INTCON ']' ',' . var_decl
+
+    ID  shift, and go to state 37
+
+    var_decl  go to state 67
+
+
+state 51
+
+   26 parm_types: type ID ',' parm_types .
+
+    $default  reduce using rule 26 (parm_types)
+
+
+state 52
+
+   25 parm_types: type ID '[' ']' .
+   27           | type ID '[' ']' . ',' parm_types
+
+    ','  shift, and go to state 68
+
+    $default  reduce using rule 25 (parm_types)
+
+
+state 53
+
+   41 stmt: ID . ';'
+   42     | ID . '(' expr_list ')' ';'
+   48 assg: ID . '=' expr
+   49     | ID . '[' expr ']' '=' expr
+
+    ';'  shift, and go to state 69
+    '('  shift, and go to state 70
+    '['  shift, and go to state 71
+    '='  shift, and go to state 72
+
+
+state 54
+
+   35 stmt: IF . '(' expr ')' stmt
+   36     | IF . '(' expr ')' stmt ELSE stmt
+
+    '('  shift, and go to state 73
+
+
+state 55
+
+   37 stmt: WHILE . '(' expr ')' stmt
+
+    '('  shift, and go to state 74
+
+
+state 56
+
+   38 stmt: FOR . '(' maybe_assg ';' maybe_expr ';' maybe_assg ')' stmt
+
+    '('  shift, and go to state 75
+
+
+state 57
+
+   39 stmt: RETURN . maybe_expr ';'
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    $default  reduce using rule 65 (maybe_expr)
+
+    expr        go to state 83
+    maybe_expr  go to state 84
+
+
+state 58
+
+   44 stmt: ';' .
+
+    $default  reduce using rule 44 (stmt)
+
+
+state 59
+
+   43 stmt: '{' . stmt_list '}'
+
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    $default  reduce using rule 45 (stmt_list)
+
+    stmt       go to state 85
+    stmt_list  go to state 86
+    assg       go to state 64
+
+
+state 60
+
+   30 sub_prog: dcl . ';'
+   31         | dcl . ';' sub_prog
+
+    ';'  shift, and go to state 87
+
+
+state 61
+
+   10 dcl: type . var_decl
+
+    ID  shift, and go to state 37
+
+    var_decl  go to state 21
+
+
+state 62
+
+   29 func: VOID ID '(' parm_types ')' '{' sub_prog . '}'
+
+    '}'  shift, and go to state 88
+
+
+state 63
+
+   32 sub_prog: stmt .
+   33         | stmt . sub_prog
+
+    INT     shift, and go to state 3
+    CHAR    shift, and go to state 4
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    EXTERN  shift, and go to state 6
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    INT       [reduce using rule 16 (maybe_extern)]
+    CHAR      [reduce using rule 16 (maybe_extern)]
+    '}'       reduce using rule 32 (sub_prog)
+    '}'       [reduce using rule 34 (sub_prog)]
+    $default  reduce using rule 16 (maybe_extern)
+
+    dcl           go to state 60
+    maybe_extern  go to state 12
+    type          go to state 61
+    sub_prog      go to state 89
+    stmt          go to state 63
+    assg          go to state 64
+
+
+state 64
+
+   40 stmt: assg . ';'
+
+    ';'  shift, and go to state 90
+
+
+state 65
+
+   13 func_protos: ID '(' parm_types ')' .
+   14            | ID '(' parm_types ')' . ',' func_protos
+
+    ','  shift, and go to state 91
+
+    $default  reduce using rule 13 (func_protos)
+
+
+state 66
+
+   28 func: type ID '(' parm_types ')' '{' sub_prog . '}'
+
+    '}'  shift, and go to state 92
+
+
+state 67
+
+   18 var_decl: ID '[' INTCON ']' ',' var_decl .
+
+    $default  reduce using rule 18 (var_decl)
+
+
+state 68
+
+   27 parm_types: type ID '[' ']' ',' . parm_types
+
+    INT   shift, and go to state 3
+    CHAR  shift, and go to state 4
+    VOID  shift, and go to state 30
+
+    type        go to state 31
+    parm_types  go to state 93
+
+
+state 69
+
+   41 stmt: ID ';' .
+
+    $default  reduce using rule 41 (stmt)
+
+
+state 70
+
+   42 stmt: ID '(' . expr_list ')' ';'
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr       go to state 94
+    expr_list  go to state 95
+
+
+state 71
+
+   49 assg: ID '[' . expr ']' '=' expr
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 96
+
+
+state 72
+
+   48 assg: ID '=' . expr
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 97
+
+
+state 73
+
+   35 stmt: IF '(' . expr ')' stmt
+   36     | IF '(' . expr ')' stmt ELSE stmt
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 98
+
+
+state 74
+
+   37 stmt: WHILE '(' . expr ')' stmt
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 99
+
+
+state 75
+
+   38 stmt: FOR '(' . maybe_assg ';' maybe_expr ';' maybe_assg ')' stmt
+
+    ID  shift, and go to state 100
+
+    $default  reduce using rule 51 (maybe_assg)
+
+    assg        go to state 101
+    maybe_assg  go to state 102
+
+
+state 76
+
+   61 expr: INTCON .
+
+    $default  reduce using rule 61 (expr)
+
+
+state 77
+
+   57 expr: ID .
+   58     | ID . '(' expr_list ')'
+   59     | ID . '[' expr ']'
+
+    '('  shift, and go to state 103
+    '['  shift, and go to state 104
+
+    $default  reduce using rule 57 (expr)
+
+
+state 78
+
+   62 expr: CHARCON .
+
+    $default  reduce using rule 62 (expr)
+
+
+state 79
+
+   63 expr: STRINGCON .
+
+    $default  reduce using rule 63 (expr)
+
+
+state 80
+
+   60 expr: '(' . expr ')'
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 105
+
+
+state 81
+
+   52 expr: '-' . expr
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 106
+
+
+state 82
+
+   53 expr: '!' . expr
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 107
+
+
+state 83
+
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+   64 maybe_expr: expr .
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    $default  reduce using rule 64 (maybe_expr)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 84
+
+   39 stmt: RETURN maybe_expr . ';'
+
+    ';'  shift, and go to state 123
+
+
+state 85
+
+   46 stmt_list: stmt . stmt_list
+   47          | stmt .
+
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    '}'       reduce using rule 45 (stmt_list)
+    '}'       [reduce using rule 47 (stmt_list)]
+    $default  reduce using rule 45 (stmt_list)
+
+    stmt       go to state 85
+    stmt_list  go to state 124
+    assg       go to state 64
+
+
+state 86
+
+   43 stmt: '{' stmt_list . '}'
+
+    '}'  shift, and go to state 125
+
+
+state 87
+
+   30 sub_prog: dcl ';' .
+   31         | dcl ';' . sub_prog
+
+    INT     shift, and go to state 3
+    CHAR    shift, and go to state 4
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    EXTERN  shift, and go to state 6
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    INT       [reduce using rule 16 (maybe_extern)]
+    CHAR      [reduce using rule 16 (maybe_extern)]
+    '}'       reduce using rule 30 (sub_prog)
+    '}'       [reduce using rule 34 (sub_prog)]
+    $default  reduce using rule 16 (maybe_extern)
+
+    dcl           go to state 60
+    maybe_extern  go to state 12
+    type          go to state 61
+    sub_prog      go to state 126
+    stmt          go to state 63
+    assg          go to state 64
+
+
+state 88
+
+   29 func: VOID ID '(' parm_types ')' '{' sub_prog '}' .
+
+    $default  reduce using rule 29 (func)
+
+
+state 89
+
+   33 sub_prog: stmt sub_prog .
+
+    $default  reduce using rule 33 (sub_prog)
+
+
+state 90
+
+   40 stmt: assg ';' .
+
+    $default  reduce using rule 40 (stmt)
+
+
+state 91
+
+   14 func_protos: ID '(' parm_types ')' ',' . func_protos
+
+    ID  shift, and go to state 33
+
+    func_protos  go to state 127
+
+
+state 92
+
+   28 func: type ID '(' parm_types ')' '{' sub_prog '}' .
+
+    $default  reduce using rule 28 (func)
+
+
+state 93
+
+   27 parm_types: type ID '[' ']' ',' parm_types .
+
+    $default  reduce using rule 27 (parm_types)
+
+
+state 94
+
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+   66 expr_list: expr .
+   67          | expr . ',' expr_list
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    ','  shift, and go to state 128
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    $default  reduce using rule 66 (expr_list)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 95
+
+   42 stmt: ID '(' expr_list . ')' ';'
+
+    ')'  shift, and go to state 129
+
+
+state 96
+
+   49 assg: ID '[' expr . ']' '=' expr
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    ']'  shift, and go to state 130
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 97
+
+   48 assg: ID '=' expr .
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    $default  reduce using rule 48 (assg)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 98
+
+   35 stmt: IF '(' expr . ')' stmt
+   36     | IF '(' expr . ')' stmt ELSE stmt
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    ')'  shift, and go to state 131
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 99
+
+   37 stmt: WHILE '(' expr . ')' stmt
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    ')'  shift, and go to state 132
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 100
+
+   48 assg: ID . '=' expr
+   49     | ID . '[' expr ']' '=' expr
+
+    '['  shift, and go to state 71
+    '='  shift, and go to state 72
+
+
+state 101
+
+   50 maybe_assg: assg .
+
+    $default  reduce using rule 50 (maybe_assg)
+
+
+state 102
+
+   38 stmt: FOR '(' maybe_assg . ';' maybe_expr ';' maybe_assg ')' stmt
+
+    ';'  shift, and go to state 133
+
+
+state 103
+
+   58 expr: ID '(' . expr_list ')'
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr       go to state 94
+    expr_list  go to state 134
+
+
+state 104
+
+   59 expr: ID '[' . expr ']'
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 135
+
+
+state 105
+
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+   60     | '(' expr . ')'
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    ')'  shift, and go to state 136
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 106
+
+   52 expr: '-' expr .
+   54     | expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    AND       [reduce using rule 52 (expr)]
+    OR        [reduce using rule 52 (expr)]
+    MEI       [reduce using rule 52 (expr)]
+    MAI       [reduce using rule 52 (expr)]
+    '='       [reduce using rule 52 (expr)]
+    '-'       [reduce using rule 52 (expr)]
+    '!'       [reduce using rule 52 (expr)]
+    '+'       [reduce using rule 52 (expr)]
+    '*'       [reduce using rule 52 (expr)]
+    '/'       [reduce using rule 52 (expr)]
+    '<'       [reduce using rule 52 (expr)]
+    '>'       [reduce using rule 52 (expr)]
+    $default  reduce using rule 52 (expr)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 107
+
+   53 expr: '!' expr .
+   54     | expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    AND       [reduce using rule 53 (expr)]
+    OR        [reduce using rule 53 (expr)]
+    MEI       [reduce using rule 53 (expr)]
+    MAI       [reduce using rule 53 (expr)]
+    '='       [reduce using rule 53 (expr)]
+    '-'       [reduce using rule 53 (expr)]
+    '!'       [reduce using rule 53 (expr)]
+    '+'       [reduce using rule 53 (expr)]
+    '*'       [reduce using rule 53 (expr)]
+    '/'       [reduce using rule 53 (expr)]
+    '<'       [reduce using rule 53 (expr)]
+    '>'       [reduce using rule 53 (expr)]
+    $default  reduce using rule 53 (expr)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 108
+
+   78 logical_op: AND .
+
+    $default  reduce using rule 78 (logical_op)
+
+
+state 109
+
+   79 logical_op: OR .
+
+    $default  reduce using rule 79 (logical_op)
+
+
+state 110
+
+   76 relop: MEI .
+
+    $default  reduce using rule 76 (relop)
+
+
+state 111
+
+   77 relop: MAI .
+
+    $default  reduce using rule 77 (relop)
+
+
+state 112
+
+   72 relop: '=' .
+
+    $default  reduce using rule 72 (relop)
+
+
+state 113
+
+   69 binop: '-' .
+
+    $default  reduce using rule 69 (binop)
+
+
+state 114
+
+   73 relop: '!' .
+
+    $default  reduce using rule 73 (relop)
+
+
+state 115
+
+   68 binop: '+' .
+
+    $default  reduce using rule 68 (binop)
+
+
+state 116
+
+   70 binop: '*' .
+
+    $default  reduce using rule 70 (binop)
+
+
+state 117
+
+   71 binop: '/' .
+
+    $default  reduce using rule 71 (binop)
+
+
+state 118
+
+   74 relop: '<' .
+
+    $default  reduce using rule 74 (relop)
+
+
+state 119
+
+   75 relop: '>' .
+
+    $default  reduce using rule 75 (relop)
+
+
+state 120
+
+   54 expr: expr binop . expr
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 137
+
+
+state 121
+
+   55 expr: expr relop . expr
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 138
+
+
+state 122
+
+   56 expr: expr logical_op . expr
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 139
+
+
+state 123
+
+   39 stmt: RETURN maybe_expr ';' .
+
+    $default  reduce using rule 39 (stmt)
+
+
+state 124
+
+   46 stmt_list: stmt stmt_list .
+
+    $default  reduce using rule 46 (stmt_list)
+
+
+state 125
+
+   43 stmt: '{' stmt_list '}' .
+
+    $default  reduce using rule 43 (stmt)
+
+
+state 126
+
+   31 sub_prog: dcl ';' sub_prog .
+
+    $default  reduce using rule 31 (sub_prog)
+
+
+state 127
+
+   14 func_protos: ID '(' parm_types ')' ',' func_protos .
+
+    $default  reduce using rule 14 (func_protos)
+
+
+state 128
+
+   67 expr_list: expr ',' . expr_list
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr       go to state 94
+    expr_list  go to state 140
+
+
+state 129
+
+   42 stmt: ID '(' expr_list ')' . ';'
+
+    ';'  shift, and go to state 141
+
+
+state 130
+
+   49 assg: ID '[' expr ']' . '=' expr
+
+    '='  shift, and go to state 142
+
+
+state 131
+
+   35 stmt: IF '(' expr ')' . stmt
+   36     | IF '(' expr ')' . stmt ELSE stmt
+
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    stmt  go to state 143
+    assg  go to state 64
+
+
+state 132
+
+   37 stmt: WHILE '(' expr ')' . stmt
+
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    stmt  go to state 144
+    assg  go to state 64
+
+
+state 133
+
+   38 stmt: FOR '(' maybe_assg ';' . maybe_expr ';' maybe_assg ')' stmt
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    $default  reduce using rule 65 (maybe_expr)
+
+    expr        go to state 83
+    maybe_expr  go to state 145
+
+
+state 134
+
+   58 expr: ID '(' expr_list . ')'
+
+    ')'  shift, and go to state 146
+
+
+state 135
+
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+   59     | ID '[' expr . ']'
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    ']'  shift, and go to state 147
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 136
+
+   60 expr: '(' expr ')' .
+
+    $default  reduce using rule 60 (expr)
+
+
+state 137
+
+   54 expr: expr . binop expr
+   54     | expr binop expr .
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    AND       [reduce using rule 54 (expr)]
+    OR        [reduce using rule 54 (expr)]
+    MEI       [reduce using rule 54 (expr)]
+    MAI       [reduce using rule 54 (expr)]
+    '='       [reduce using rule 54 (expr)]
+    '-'       [reduce using rule 54 (expr)]
+    '!'       [reduce using rule 54 (expr)]
+    '+'       [reduce using rule 54 (expr)]
+    '*'       [reduce using rule 54 (expr)]
+    '/'       [reduce using rule 54 (expr)]
+    '<'       [reduce using rule 54 (expr)]
+    '>'       [reduce using rule 54 (expr)]
+    $default  reduce using rule 54 (expr)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 138
+
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   55     | expr relop expr .
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    AND       [reduce using rule 55 (expr)]
+    OR        [reduce using rule 55 (expr)]
+    MEI       [reduce using rule 55 (expr)]
+    MAI       [reduce using rule 55 (expr)]
+    '='       [reduce using rule 55 (expr)]
+    '-'       [reduce using rule 55 (expr)]
+    '!'       [reduce using rule 55 (expr)]
+    '+'       [reduce using rule 55 (expr)]
+    '*'       [reduce using rule 55 (expr)]
+    '/'       [reduce using rule 55 (expr)]
+    '<'       [reduce using rule 55 (expr)]
+    '>'       [reduce using rule 55 (expr)]
+    $default  reduce using rule 55 (expr)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 139
+
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+   56     | expr logical_op expr .
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    AND       [reduce using rule 56 (expr)]
+    OR        [reduce using rule 56 (expr)]
+    MEI       [reduce using rule 56 (expr)]
+    MAI       [reduce using rule 56 (expr)]
+    '='       [reduce using rule 56 (expr)]
+    '-'       [reduce using rule 56 (expr)]
+    '!'       [reduce using rule 56 (expr)]
+    '+'       [reduce using rule 56 (expr)]
+    '*'       [reduce using rule 56 (expr)]
+    '/'       [reduce using rule 56 (expr)]
+    '<'       [reduce using rule 56 (expr)]
+    '>'       [reduce using rule 56 (expr)]
+    $default  reduce using rule 56 (expr)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 140
+
+   67 expr_list: expr ',' expr_list .
+
+    $default  reduce using rule 67 (expr_list)
+
+
+state 141
+
+   42 stmt: ID '(' expr_list ')' ';' .
+
+    $default  reduce using rule 42 (stmt)
+
+
+state 142
+
+   49 assg: ID '[' expr ']' '=' . expr
+
+    INTCON     shift, and go to state 76
+    ID         shift, and go to state 77
+    CHARCON    shift, and go to state 78
+    STRINGCON  shift, and go to state 79
+    '('        shift, and go to state 80
+    '-'        shift, and go to state 81
+    '!'        shift, and go to state 82
+
+    expr  go to state 148
+
+
+state 143
+
+   35 stmt: IF '(' expr ')' stmt .
+   36     | IF '(' expr ')' stmt . ELSE stmt
+
+    ELSE  shift, and go to state 149
+
+    ELSE      [reduce using rule 35 (stmt)]
+    $default  reduce using rule 35 (stmt)
+
+
+state 144
+
+   37 stmt: WHILE '(' expr ')' stmt .
+
+    $default  reduce using rule 37 (stmt)
+
+
+state 145
+
+   38 stmt: FOR '(' maybe_assg ';' maybe_expr . ';' maybe_assg ')' stmt
+
+    ';'  shift, and go to state 150
+
+
+state 146
+
+   58 expr: ID '(' expr_list ')' .
+
+    $default  reduce using rule 58 (expr)
+
+
+state 147
+
+   59 expr: ID '[' expr ']' .
+
+    $default  reduce using rule 59 (expr)
+
+
+state 148
+
+   49 assg: ID '[' expr ']' '=' expr .
+   54 expr: expr . binop expr
+   55     | expr . relop expr
+   56     | expr . logical_op expr
+
+    AND  shift, and go to state 108
+    OR   shift, and go to state 109
+    MEI  shift, and go to state 110
+    MAI  shift, and go to state 111
+    '='  shift, and go to state 112
+    '-'  shift, and go to state 113
+    '!'  shift, and go to state 114
+    '+'  shift, and go to state 115
+    '*'  shift, and go to state 116
+    '/'  shift, and go to state 117
+    '<'  shift, and go to state 118
+    '>'  shift, and go to state 119
+
+    $default  reduce using rule 49 (assg)
+
+    binop       go to state 120
+    relop       go to state 121
+    logical_op  go to state 122
+
+
+state 149
+
+   36 stmt: IF '(' expr ')' stmt ELSE . stmt
+
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    stmt  go to state 151
+    assg  go to state 64
+
+
+state 150
+
+   38 stmt: FOR '(' maybe_assg ';' maybe_expr ';' . maybe_assg ')' stmt
+
+    ID  shift, and go to state 100
+
+    $default  reduce using rule 51 (maybe_assg)
+
+    assg        go to state 101
+    maybe_assg  go to state 152
+
+
+state 151
+
+   36 stmt: IF '(' expr ')' stmt ELSE stmt .
+
+    $default  reduce using rule 36 (stmt)
+
+
+state 152
+
+   38 stmt: FOR '(' maybe_assg ';' maybe_expr ';' maybe_assg . ')' stmt
+
+    ')'  shift, and go to state 153
+
+
+state 153
+
+   38 stmt: FOR '(' maybe_assg ';' maybe_expr ';' maybe_assg ')' . stmt
+
+    ID      shift, and go to state 53
+    IF      shift, and go to state 54
+    WHILE   shift, and go to state 55
+    FOR     shift, and go to state 56
+    RETURN  shift, and go to state 57
+    ';'     shift, and go to state 58
+    '{'     shift, and go to state 59
+
+    stmt  go to state 154
+    assg  go to state 64
+
+
+state 154
+
+   38 stmt: FOR '(' maybe_assg ';' maybe_expr ';' maybe_assg ')' stmt .
+
+    $default  reduce using rule 38 (stmt)
